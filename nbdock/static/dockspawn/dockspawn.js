@@ -653,7 +653,8 @@
 //    if (_cachedWidth === _cachedWidth && _cachedHeight === _height) {
 //      // No need to resize
 //      return;
-//    }
+                //    }
+                console.log('Splitter.resize', width, 'x', height)
                 this.splitterPanel.resize(width, height);
                 this._cachedWidth = width;
                 this._cachedHeight = height;
@@ -1633,6 +1634,7 @@
             };
 
             DockManager.prototype.resize = function (width, height) {
+                console.log("DM resizing ", this," to:", width, 'x', height);
                 this.element.style.width = width + 'px';
                 this.element.style.height = height + 'px';
                 this.context.model.rootNode.container.resize(width, height);
@@ -3273,7 +3275,7 @@
             TabHost.prototype.resize = function (width, height) {
                 this.hostElement.style.width = width + 'px';
                 this.hostElement.style.height = height + 'px';
-
+                console.log("TabHost.resizing ", this," to:", width, 'x', height);
                 var tabHeight = this.tabListElement.clientHeight;
                 if (this.timeoutPerform) //lazy check
                     clearTimeout(this.timeoutPerform);
