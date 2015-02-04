@@ -1,12 +1,21 @@
-define([
-    'base/js/namespace',
-    'jquery',
-    "base/js/events",
-    "/nbextensions/nbdock/static/dockspawn/dockspawn.js"
-], function(IPython, $, events, dockspawn) {
+define(function (require) {
     "use strict";
 
+
+    var IPython = require('base/js/namespace');
+    var $ = require('jquery');
+    var events = require("base/js/events");
+    var dockspawn = require('/nbextensions/nbdock/static/dockspawn/dockspawn.js');
+    var codecell = require('notebook/js/codecell');
+
+
     var storeKey = 'lastState';
+
+    var dockManager;
+
+
+
+
 
     IPython.toolbar.add_buttons_group([
         {
@@ -20,8 +29,60 @@ define([
         },
     ]);
 
+        IPython.toolbar.add_buttons_group([
+        {
+            id : 'refresh_layout',
+            label : 'Refresh Layout',
+            icon : 'fa-mortar-board',
+            callback : function () {
+
+                var nb = IPython.notebook; // get the current notebook...
+                var cell_options = {
+                    events: nb.events,
+                    config: nb.config,
+                    keyboard_manager: nb.keyboard_manager,
+                    notebook: nb,
+                    tooltip: nb.tooltip,
+                };
+                var cell = new codecell.CodeCell(nb.kernel, cell_options);
+                cell.set_input_prompt();
+                cell.element.find("div.input_prompt").hide();
+                cell.element.find("div.output_prompt").hide();
+                cell.element.find("div.prompt").hide();
+
+                var mycell = $('<div></div>');
+                $('body').append(mycell);
+                $('<a>exec</a>')
+                    .appendTo(mycell)
+                    .on('click', function() {
+                        cell.execute();
+                        cell.element.find("div.output_prompt").hide();
+                    });
+                $('<a>toggle</a>')
+                    .appendTo(mycell)
+                    .on('click', function() {
+                        cell.element.find("div.input").toggle('show');
+                    });
+
+                mycell.append(cell.element);
+
+
+
+
+                //if(this._insert_element_at_index(cell.element,index)) {
+
+                var nbp = new dockspawn.PanelContainer(mycell[0], dockManager);
+                dockManager.floatDialog(nbp, 100, 100);
+
+                cell.render();
+                //this.events.trigger('create.Cell', {'cell': cell, 'index': index});
+                cell.refresh();
+                //nb.set_dirty(true);
+            }
+        },
+    ]);
+
     var createWindows = function() {
-        var dockManager;
 
 
         // Convert a div to the dock manager. Panels can then be docked on to it
