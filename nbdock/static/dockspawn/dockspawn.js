@@ -654,6 +654,11 @@
 //      // No need to resize
 //      return;
                 //    }
+                if (width <= 0) {
+                    width = 100;
+                    console.error("Splitter.resize width was 0");
+                }
+
                 console.log('Splitter.resize', width, 'x', height)
                 this.splitterPanel.resize(width, height);
                 this._cachedWidth = width;
@@ -3273,6 +3278,11 @@
             };
 
             TabHost.prototype.resize = function (width, height) {
+                if (width <= 0) {
+                    width = 100;
+                    console.error("TabHost.resize width was 0");
+                }
+
                 this.hostElement.style.width = width + 'px';
                 this.hostElement.style.height = height + 'px';
                 console.log("TabHost.resizing ", this," to:", width, 'x', height);
