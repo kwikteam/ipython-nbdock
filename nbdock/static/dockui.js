@@ -37,14 +37,15 @@ define(function (require) {
             callback : function () {
 
                 var nb = IPython.notebook; // get the current notebook...
-                var cell_options = {
-                    events: nb.events,
-                    config: nb.config,
-                    keyboard_manager: nb.keyboard_manager,
-                    notebook: nb,
-                    tooltip: nb.tooltip,
-                };
-                var cell = new codecell.CodeCell(nb.kernel, cell_options);
+                // var cell_options = {
+                //     events: nb.events,
+                //     config: nb.config,
+                //     keyboard_manager: nb.keyboard_manager,
+                //     notebook: nb,
+                //     tooltip: nb.tooltip,
+                // };
+                // var cell = new codecell.CodeCell(nb.kernel, cell_options);
+                var cell = nb.insert_cell_at_bottom('code');
                 cell.set_input_prompt();
                 cell.element.find("div.input_prompt").hide();
                 cell.element.find("div.output_prompt").hide();
@@ -66,17 +67,12 @@ define(function (require) {
 
                 mycell.append(cell.element);
 
-
-
-
-                //if(this._insert_element_at_index(cell.element,index)) {
-
                 var nbp = new dockspawn.PanelContainer(mycell[0], dockManager);
                 dockManager.floatDialog(nbp, 100, 100);
 
-                cell.render();
+                //cell.render();
                 //this.events.trigger('create.Cell', {'cell': cell, 'index': index});
-                cell.refresh();
+                //cell.refresh();
                 //nb.set_dirty(true);
             }
         },
